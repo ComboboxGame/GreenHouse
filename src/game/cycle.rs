@@ -1,11 +1,23 @@
-use bevy::{app::{App, Plugin, Startup, Update}, ecs::{component::Component, entity::Entity, system::{Commands, Query, Res}}, state::state::StateTransition, time::Time};
+use bevy::prelude::*;
+use std::fmt::Display;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum CycleType {
     Solar,
     Water,
     Temperature,
     Wind,
+}
+
+impl ToString for CycleType {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Solar => "Solar",
+            Self::Temperature => "Temperature",
+            Self::Wind => "Wind",
+            Self::Water => "Water"
+        }.to_string()
+    }
 }
 
 #[derive(Debug, Component)]
@@ -24,6 +36,10 @@ impl Cycle {
             value: 0.,
             r#type,
         }
+    }
+
+    pub fn cycle_type(&self) -> CycleType {
+        self.r#type.clone()
     }
 
     pub fn update(&mut self, time: f32) {

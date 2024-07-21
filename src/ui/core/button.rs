@@ -1,15 +1,21 @@
 use bevy::{prelude::*, ui::FocusPolicy};
 
+use super::label::spawn_label;
+
 #[derive(Component, Default)]
-pub struct MyButton {
+pub struct Button {
     pub enabled: bool,
 }
 
-pub fn spawn_button<T: Bundle>(builder: &mut ChildBuilder, title: &str, components: T) {
-    builder
+pub fn spawn_button<T: Bundle>(
+    commands: &mut Commands,
+    title: &str,
+    components: T,
+) -> Entity {
+    let button = commands
         .spawn((
             components,
-            MyButton::default(),
+            Button::default(),
             Interaction::default(),
             NodeBundle {
                 style: Style {
@@ -23,13 +29,11 @@ pub fn spawn_button<T: Bundle>(builder: &mut ChildBuilder, title: &str, componen
             },
             UiImage::default(),
         ))
-        .with_children(|builder| {
-            builder.spawn((TextBundle::from_section(
-                title,
-                TextStyle {
-                    font_size: 24.,
-                    ..Default::default()
-                },
-            ),));
-        });
+        .id();
+
+    let label = spawn_label(commands, title, ());
+
+    commands.entity(button).push_children(&[label]);
+
+    button
 }
