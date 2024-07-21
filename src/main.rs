@@ -6,12 +6,15 @@
 
 use bevy::prelude::*;
 use game::Game;
+use ui::UIPlugin;
 
 mod game;
+mod ui;
 
 fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins);
-    app.add_plugins(Game{});
+    app.add_plugins(Game {});
+    app.add_plugins(UIPlugin {});
     app.run();
 }
